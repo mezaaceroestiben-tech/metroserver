@@ -1,0 +1,11 @@
+name: Mantener despierto el servidor
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  llamar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llamar al servidor
+        run: curl -fsS --max-time 90 "https://juntos-mezaaceroestiben-tech.onrender.com/health" || true
