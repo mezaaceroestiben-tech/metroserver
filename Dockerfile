@@ -8,6 +8,8 @@ ENV PATH="/root/go/bin:${PATH}"
 COPY . .
 # Si el submódulo del protocolo no vino con el código, se descarga aquí.
 RUN [ -f metroproto/listentogether.proto ] || (rm -rf metroproto && git clone --depth 1 https://github.com/metrolistgroup/metroproto metroproto)
+# Extras de miliMusic: mensajes de voz, página de invitación /listen y modos de propuesta.
+RUN sh parche_mili.sh
 RUN bash scripts/generate_proto.sh
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o metroserver -ldflags="-w -s" ./cmd/metroserver
 
@@ -17,8 +19,10 @@ RUN addgroup -g 1000 metrolist && adduser -D -u 1000 -G metrolist metrolist
 WORKDIR /app
 COPY --from=builder /build/metroserver .
 COPY ua_policy.json /app/ua_policy.json
+COPY mili_config.json /app/mili_config.json
 RUN mkdir -p /app/data && chown -R metrolist:metrolist /app
 ENV UA_POLICY_FILE=/app/ua_policy.json
+ENV MILI_CONFIG_FILE=/app/mili_config.json
 USER metrolist
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
