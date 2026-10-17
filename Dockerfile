@@ -12,7 +12,6 @@ RUN [ -f metroproto/listentogether.proto ] || (rm -rf metroproto && git clone --
 RUN sh parche_mili.sh
 RUN bash scripts/generate_proto.sh
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o metroserver -ldflags="-w -s" ./cmd/metroserver
-
 FROM alpine:3.20
 RUN apk add --no-cache ca-certificates
 RUN addgroup -g 1000 metrolist && adduser -D -u 1000 -G metrolist metrolist
@@ -26,5 +25,5 @@ ENV MILI_CONFIG_FILE=/app/mili_config.json
 USER metrolist
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider "http://localhost:${PORT:-8080}/health" || exit 1
+CMD wget --no-verbose --tries=1 --spider "http://localhost:${PORT:-8080}/health" || exit 1
 CMD ["./metroserver"]
