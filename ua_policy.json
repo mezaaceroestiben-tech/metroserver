@@ -1,6 +1,6 @@
 {
-  "allow": ["com.estiben.milimusic"],
-  "block": [],
-  "rickroll": [],
-  "advert": []
+ "allow": ["com.estiben.milimusic.Beta"],
+ "block": [],
+ "rickroll": [],
+ "advert": []
 }
